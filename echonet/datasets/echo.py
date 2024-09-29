@@ -97,14 +97,14 @@ class Echo(torchvision.datasets.VisionDataset):
             # Load video-level labels
             with open(os.path.join(self.root, "FileList.csv")) as f:
                 data = pandas.read_csv(f)
-            data["Split"].map(lambda x: x.upper())
+            data['Split'] = data["Split"].map(lambda x: x.upper())
 
             if self.split != "ALL":
                 data = data[data["Split"] == self.split]
 
             self.header = data.columns.tolist()
             self.fnames = data["FileName"].tolist()
-            self.fnames = [fn + ".avi" for fn in self.fnames if os.path.splitext(fn)[1] == ""]  # Assume avi if no suffix
+            self.fnames = [fn + ".avi" if os.path.splitext(fn)[1] == "" else fn for fn in self.fnames ]  # Assume avi if no suffix
             self.outcome = data.values.tolist()
 
             # Check that files are present
